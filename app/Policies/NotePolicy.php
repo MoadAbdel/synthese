@@ -1,0 +1,46 @@
+<?php
+
+namespace App\Policies;
+
+use App\Models\Note;
+use App\Models\User;
+
+class NotePolicy
+{
+    /**
+     * L'admin a toutes les permissions sur les notes.
+     */
+    public function before(User $user, string $ability): ?bool
+    {
+        if ($user->can('manage notes')) {
+            return true;
+        }
+
+        return null;
+    }
+
+    public function viewAny(User $user): bool
+    {
+        return true;
+    }
+
+    public function view(User $user, Note $note): bool
+    {
+        return $user->id === $note->user_id;
+    }
+
+    public function create(User $user): bool
+    {
+        return true;
+    }
+
+    public function update(User $user, Note $note): bool
+    {
+        return $user->id === $note->user_id;
+    }
+
+    public function delete(User $user, Note $note): bool
+    {
+        return $user->id === $note->user_id;
+    }
+}
